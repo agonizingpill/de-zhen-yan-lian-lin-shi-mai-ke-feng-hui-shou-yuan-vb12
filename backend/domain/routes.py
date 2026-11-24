@@ -15,6 +15,11 @@ def points(user=Depends(actor)):
     return catalog.patchboard()
 
 
+@patch.get("/queue")
+def waiting(user=Depends(actor)):
+    return channel.waiting_list()
+
+
 @audio.get("")
 def windows(user=Depends(actor)):
     return catalog.audio()

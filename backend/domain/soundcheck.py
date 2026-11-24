@@ -2,12 +2,14 @@ from fastapi import HTTPException
 from core.audit import record
 from core.db import transaction
 from domain.catalog import latest,one
+from domain.channel import lock_patch
 from domain.soundboard import points,windows
 from domain.states import Patch
 
 
 def capture(form,user):
     with transaction() as conn:
+        lock_patch(conn)
         point=one(conn,points,form.point,lock=True)
         purpose="reline" if point["patch"]==Patch.ISOLATED else "live"
         previous=latest(conn,point,purpose)
